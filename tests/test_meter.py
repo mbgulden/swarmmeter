@@ -1,7 +1,10 @@
 import time
+
 import pytest
+
 from swarmmeter.meter import TokenMeter
-from swarmmeter.types import TokenUsage, QuotaPolicy, QuotaExhausted, BreakerState
+from swarmmeter.types import BreakerState, QuotaExhausted, QuotaPolicy, TokenUsage
+
 
 def test_token_meter_record_and_stats():
     meter = TokenMeter()
