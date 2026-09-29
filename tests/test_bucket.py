@@ -10,12 +10,19 @@ def test_bucket_consume():
     assert bucket.consume(6) is False
     assert bucket.remaining() == 5
 
-def test_bucket_refill():
+def test_bucket_refill(monkeypatch):
+    # Drive the bucket's monotonic clock manually: exact refill math, zero
+    # wall-clock dependence (the old time.sleep(0.15) version flaked on
+    # loaded CI runners when the sleep overshot into a second interval).
+    now = [1000.0]
+    monkeypatch.setattr(time, "monotonic", lambda: now[0])
     bucket = TokenBucket(capacity=10, refill_rate=5, refill_interval=0.1)
-    bucket.consume(10)
+    assert bucket.consume(10) is True
     assert bucket.remaining() == 0
-    time.sleep(0.15)
+    now[0] += 0.15  # one refill interval elapses -> +5 tokens
     assert bucket.remaining() == 5
+    now[0] += 0.10  # second interval -> refills to the capacity cap
+    assert bucket.remaining() == 10
 
 def test_bucket_wait_and_consume():
     bucket = TokenBucket(capacity=10, refill_rate=10, refill_interval=0.2)
