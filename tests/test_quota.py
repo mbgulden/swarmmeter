@@ -1,7 +1,10 @@
 import time
+
 import pytest
+
 from swarmmeter.quota import QuotaManager
-from swarmmeter.types import QuotaPolicy, TokenUsage, QuotaExhausted
+from swarmmeter.types import QuotaExhausted, QuotaPolicy, TokenUsage
+
 
 def test_quota_manager_within_limits():
     policy = QuotaPolicy(daily_budget_usd=10.0, per_agent_budget_usd=5.0)

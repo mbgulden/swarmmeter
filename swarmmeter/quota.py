@@ -1,14 +1,16 @@
+from __future__ import annotations
+
 import sqlite3
 import threading
 from pathlib import Path
-from typing import Optional
 
-from .types import QuotaPolicy, TokenUsage, MeterStats, QuotaExhausted
+from .types import MeterStats, QuotaExhausted, QuotaPolicy, TokenUsage
+
 
 class QuotaManager:
     """Manages cluster-wide budget quotas."""
 
-    def __init__(self, policy: QuotaPolicy, db_path: Optional[Path] = None):
+    def __init__(self, policy: QuotaPolicy, db_path: Path | None = None):
         self.policy = policy
         self.db_path = db_path or Path(":memory:")
         self._lock = threading.Lock()
@@ -54,7 +56,7 @@ class QuotaManager:
                 self.conn.commit()
                 raise QuotaExhausted("Quota exhausted")
 
-    def _is_within_quota_unlocked(self, agent_id: Optional[str] = None) -> bool:
+    def _is_within_quota_unlocked(self, agent_id: str | None = None) -> bool:
         cursor = self.conn.cursor()
         
         # Check daily cluster budget
@@ -75,11 +77,11 @@ class QuotaManager:
                 
         return True
 
-    def is_within_quota(self, agent_id: Optional[str] = None) -> bool:
+    def is_within_quota(self, agent_id: str | None = None) -> bool:
         with self._lock:
             return self._is_within_quota_unlocked(agent_id)
 
-    def remaining_budget(self, agent_id: Optional[str] = None) -> float:
+    def remaining_budget(self, agent_id: str | None = None) -> float:
         """Remaining USD budget."""
         with self._lock:
             cursor = self.conn.cursor()

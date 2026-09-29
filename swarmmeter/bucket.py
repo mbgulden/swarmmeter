@@ -1,5 +1,6 @@
-import time
 import threading
+import time
+
 
 class TokenBucket:
     """Token bucket rate limiter."""

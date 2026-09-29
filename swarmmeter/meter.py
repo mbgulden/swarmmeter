@@ -1,22 +1,24 @@
-from pathlib import Path
-from typing import Optional, Dict
-import threading
+from __future__ import annotations
 
-from .types import QuotaPolicy, TokenUsage, MeterStats, BreakerConfig
-from .bucket import TokenBucket
-from .breaker import CircuitBreaker
+import threading
+from pathlib import Path
+
 from .anomaly import AnomalyDetector
+from .breaker import CircuitBreaker
+from .bucket import TokenBucket
 from .quota import QuotaManager
+from .types import BreakerConfig, MeterStats, QuotaPolicy, TokenUsage
+
 
 class TokenMeter:
     """Top-level facade combining bucket, breaker, anomaly, and quota."""
 
-    def __init__(self, policy: Optional[QuotaPolicy] = None, db_path: Optional[Path] = None):
+    def __init__(self, policy: QuotaPolicy | None = None, db_path: Path | None = None):
         self.policy = policy or QuotaPolicy()
         self.quota_manager = QuotaManager(self.policy, db_path)
         self.anomaly_detector = AnomalyDetector(self.policy)
-        self._breakers: Dict[str, CircuitBreaker] = {}
-        self._buckets: Dict[str, TokenBucket] = {}
+        self._breakers: dict[str, CircuitBreaker] = {}
+        self._buckets: dict[str, TokenBucket] = {}
         self._lock = threading.Lock()
         self._breaker_config = BreakerConfig()
 

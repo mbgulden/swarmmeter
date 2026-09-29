@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
+
 class MeterError(Exception):
     """Base exception for meter errors."""
 

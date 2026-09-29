@@ -1,6 +1,8 @@
 import time
+
 from swarmmeter.anomaly import AnomalyDetector
 from swarmmeter.types import QuotaPolicy, TokenUsage
+
 
 def test_anomaly_detection_token_limit():
     policy = QuotaPolicy(per_minute_token_limit=100)

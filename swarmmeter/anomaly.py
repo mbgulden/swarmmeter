@@ -1,16 +1,16 @@
+import threading
 import time
 from collections import defaultdict, deque
-import threading
-from typing import List, Dict, Deque
 
 from .types import QuotaPolicy, TokenUsage
+
 
 class AnomalyDetector:
     """Detects velocity anomalies."""
 
     def __init__(self, policy: QuotaPolicy):
         self.policy = policy
-        self._history: Dict[str, Deque[TokenUsage]] = defaultdict(deque)
+        self._history: dict[str, deque[TokenUsage]] = defaultdict(deque)
         self._lock = threading.Lock()
         self._window_size = 60.0  # 1 minute
 
@@ -25,7 +25,7 @@ class AnomalyDetector:
             self._history[usage.agent_id].append(usage)
             self._cleanup(usage.agent_id, time.monotonic())
 
-    def check(self, agent_id: str) -> List[str]:
+    def check(self, agent_id: str) -> list[str]:
         """Returns list of anomaly descriptions."""
         anomalies = []
         with self._lock:
