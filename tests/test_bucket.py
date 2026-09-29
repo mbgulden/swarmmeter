@@ -1,5 +1,7 @@
 import time
+
 from swarmmeter.bucket import TokenBucket
+
 
 def test_bucket_consume():
     bucket = TokenBucket(capacity=10, refill_rate=1, refill_interval=1.0)
