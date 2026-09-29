@@ -1,17 +1,17 @@
 import argparse
-import sys
+
 
 def main():
     parser = argparse.ArgumentParser(description="Swarmmeter CLI")
     subparsers = parser.add_subparsers(dest="command", help="Subcommand to run")
 
-    status_parser = subparsers.add_parser("status", help="Show system status")
-    
+    subparsers.add_parser("status", help="Show system status")
+
     reset_parser = subparsers.add_parser("reset", help="Reset agent")
     reset_parser.add_argument("agent_id", type=str, help="Agent ID to reset")
 
-    quota_parser = subparsers.add_parser("quota", help="Show quota information")
-    stats_parser = subparsers.add_parser("stats", help="Show system stats")
+    subparsers.add_parser("quota", help="Show quota information")
+    subparsers.add_parser("stats", help="Show system stats")
 
     args = parser.parse_args()
 
