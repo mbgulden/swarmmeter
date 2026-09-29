@@ -1,7 +1,10 @@
 import time
+
 import pytest
+
 from swarmmeter.breaker import CircuitBreaker
-from swarmmeter.types import BreakerConfig, BreakerState, CircuitOpenError
+from swarmmeter.types import BreakerConfig, BreakerState
+
 
 def test_breaker_success():
     breaker = CircuitBreaker(BreakerConfig())
